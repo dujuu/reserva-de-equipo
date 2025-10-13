@@ -12,8 +12,10 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-     protected $table = 'user'; 
+     protected $table = 'users'; 
      protected $primaryKey = 'idUser'; 
+     protected $guarded = [];
+     protected $password = 'Contrasena'; 
     /**
      * The attributes that are mass assignable.
      *
@@ -37,6 +39,29 @@ class User extends Authenticatable
     public function getAuthPassword()
     {
         return $this->Contrasena;
+    }
+    public function getAuthIdentifierName()
+    {
+        return 'idUser';
+    }
+    public function getAuthIdentifier()
+    {
+        return $this->{$this->getAuthIdentifierName()};
+    }
+        
+    public function getRememberToken()
+    {
+        return $this->{$this->getRememberTokenName()};
+    }
+
+    public function setRememberToken($value)
+    {
+        $this->{$this->getRememberTokenName()} = $value;
+    }
+
+    public function getRememberTokenName()
+    {
+        return 'remember_token';
     }
     public function persona()
     {

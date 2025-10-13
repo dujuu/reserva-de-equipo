@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth; // <-- Asegúrate de que este namespace coi
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth; 
 
 
 use App\Models\Persona; 
@@ -64,4 +65,46 @@ class AuthController extends Controller
             'token' => $token
         ], 201);
     } 
+     public function login(Request $request)
+    {
+        // 1. Validar los datos de entrada
+        $request->validate([
+            'idPersona' => 'required|integer|exists:users,idPersona',
+            'password' => 'required|string',
+        ]);
+
+        // 2. Mapear las credenciales
+        // NOTA CLAVE: La llave de la contraseña SIEMPRE DEBE SER 'password' 
+        // en el array de credenciales para que Laravel la verifique.
+        $credentials = [
+            'idPersona' => $request->idPersona, // Identificador
+            'password' => $request->password,   // La llave DEBE ser 'password'
+        ];
+
+        // 3. Intentar la autenticación
+        // Necesitas indicarle a Laravel qué campo usar para buscar.
+        // Como 'idPersona' no es el campo por defecto, usamos where y luego attempt.
+
+        // Buscamos primero el usuario por el ID (nuestro identificador)
+        $user = User::where('idPersona', $request->idPersona)->first();
+
+        // Si el usuario existe y la contraseña coincide (usando el campo Contrasena del modelo)
+        if ($user && Auth::attempt(['idPersona' => $request->idPersona, 'password' => $request->password])) {
+
+            // Ya que usamos Auth::attempt, Laravel ya hizo el trabajo de verificar la contraseña
+            
+            // 4. Crear el token
+            $token = $user->createToken('auth-token')->plainTextToken;
+
+            return response()->json([
+                'user' => $user->load('persona', 'roles'),
+                'token' => $token
+            ], 200);
+        }
+
+        // Falla: Credenciales inválidas
+        return response()->json([
+            'message' => 'Credenciales inválidas'
+        ], 401);
+    }
 }
