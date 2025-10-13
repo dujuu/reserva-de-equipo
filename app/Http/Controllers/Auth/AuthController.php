@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LoginNotification;
+
 
 
 use App\Models\Persona; 
@@ -65,6 +68,8 @@ class AuthController extends Controller
             'token' => $token
         ], 201);
     } 
+
+    
      public function login(Request $request)
     {
         // 1. Validar los datos de entrada
@@ -96,6 +101,9 @@ class AuthController extends Controller
             // 4. Crear el token
             $token = $user->createToken('auth-token')->plainTextToken;
 
+            if ($user->persona && $user->persona->Email) {
+                Mail::to($user->persona->Email)->send(new LoginNotification($user));
+            }
             return response()->json([
                 'user' => $user->load('persona', 'roles'),
                 'token' => $token
