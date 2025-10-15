@@ -115,4 +115,5 @@ class AuthController extends Controller
             'message' => 'Credenciales inválidas'
         ], 401);
     }
+
 }

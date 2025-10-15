@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController; 
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +18,8 @@ use App\Http\Controllers\Auth\AuthController;
 */
 
 // 1. RUTAS PÚBLICAS 
-
+Route::post('/forgot', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+Route::post('/reset', [ResetPasswordController::class, 'reset']);
 // Ruta para iniciar sesión
 // URL: /api/login
 Route::post('/login', [AuthController::class, 'login']);
