@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController; 
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Prestamo\PrestamoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,3 +44,5 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Aquí van tus rutas para POSTS, PRODUCTOS, etc.
 });
+Route::middleware('auth:sanctum')->post('/prestamos', [PrestamoController::class, 'store']);
+    //Route::middleware('auth:sanctum')->post('/prestamos/solicitar', [PrestamoController::class, 'solicitarPrestamo']);
