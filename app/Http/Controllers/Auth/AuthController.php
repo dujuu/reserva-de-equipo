@@ -69,7 +69,7 @@ class AuthController extends Controller
         ], 201);
     } 
 
-    
+   /*
      public function login(Request $request)
     {
         // 1. Validar los datos de entrada
@@ -114,6 +114,47 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Credenciales inválidas'
         ], 401);
+    }
+    */
+    public function login(Request $request)
+    {
+        // 1️⃣ Validar los datos de entrada
+        $request->validate([
+            'email' => 'required|email|exists:persona,Email',
+            'password' => 'required|string',
+        ]);
+
+        // 2️⃣ Buscar el usuario asociado a ese email
+        $user = User::whereHas('persona', function ($query) use ($request) {
+            $query->where('Email', $request->email);
+        })
+        ->with(['persona', 'roles'])
+        ->first();
+
+        // 3️⃣ Validar credenciales
+        if (!$user || !Auth::attempt(['idPersona' => $user->idPersona, 'password' => $request->password])) {
+            return response()->json(['message' => 'Credenciales inválidas'], 401);
+        }
+
+        // 4️⃣ Crear el token de autenticación
+        $token = $user->createToken('auth-token')->plainTextToken;
+
+        // 5️⃣ Obtener el rol principal (si solo tiene uno)
+        $rol = $user->roles->first();
+
+        // 6️⃣ Construir la respuesta limpia para el frontend
+        return response()->json([
+            'token' => $token,
+            'user' => [
+                'id' => $user->idUser,
+                'nombre' => $user->persona->Nombre ?? '',
+                'email' => $user->persona->Email ?? '',
+                'rol' => [
+                    'nombre' => $rol->Nombre ?? null,
+                    'descripcion' => $rol->Descricion ?? null,
+                ],
+            ],
+        ], 200);
     }
 
 }

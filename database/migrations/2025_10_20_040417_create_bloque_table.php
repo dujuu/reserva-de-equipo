@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddEmailToUsersTable extends Migration
+class CreateBloqueTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class AddEmailToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('Email')->unique()->nullable();
+        Schema::create('bloques', function (Blueprint $table) {
+            $table->id('idBloque');
+            $table->string('nombre', 50);
+            $table->time('hora_inicio');
+            $table->time('hora_fin');
+            #$table->timestamps();
         });
     }
 
@@ -25,8 +29,6 @@ class AddEmailToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('Email');
-        });
+        Schema::dropIfExists('bloques');
     }
 }

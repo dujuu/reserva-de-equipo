@@ -42,7 +42,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // URL: /api/logout
     Route::post('/logout', [AuthController::class, 'logout']); 
     
-    // Aquí van tus rutas para POSTS, PRODUCTOS, etc.
+    // Prestamos
+    Route::post('/prestamos', [PrestamoController::class, 'store']);
+    // Route::post('/prestamos/solicitar', [PrestamoController::class, 'solicitarPrestamo']);
 });
-Route::middleware('auth:sanctum')->post('/prestamos', [PrestamoController::class, 'store']);
+//Route::middleware('auth:sanctum')->post('/prestamos', [PrestamoController::class, 'store']);
     //Route::middleware('auth:sanctum')->post('/prestamos/solicitar', [PrestamoController::class, 'solicitarPrestamo']);

@@ -36,7 +36,7 @@ class Prestamo extends Model
         return $this->hasMany(BloquePrestamo::class, 'idPrestamo');
     }
 
-    public function observaciones()
+    public function observacion()
     {
         return $this->hasMany(Observacion::class, 'idPrestamo');
     }

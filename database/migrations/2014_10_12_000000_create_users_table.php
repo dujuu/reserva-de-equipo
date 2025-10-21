@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->unsignedBigInteger('idPersona');
             $table->string('estadoSancion')->nullable();
             $table->string('Contrasena');
+            $table->string('Email')->unique();
             $table->rememberToken();
             $table->timestamps();
              $table->foreign('idPersona')->references('idPersona')->on('persona');

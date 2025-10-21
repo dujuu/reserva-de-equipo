@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->string('codigo')->unique();
             $table->string('categoria');
             $table->string('estado');
-            $table->string('tipo');
+            //$table->string('tipo');
             $table->timestamps(); // opcional
         });
     }
